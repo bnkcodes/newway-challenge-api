@@ -1,36 +1,30 @@
 import {
-  IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
-  IsStrongPassword,
   MinLength,
   MaxLength,
+  IsOptional,
+  IsStrongPassword,
 } from 'class-validator';
-
 import { ApiProperty } from '@nestjs/swagger';
+
 import { Match } from '@/shared/decorators/custom-validator.decorator';
 import { passwordRequirements } from '@/shared/utils/password-requirements';
 
-export class CreateUserDto {
-  @ApiProperty({ type: String, required: true })
-  @IsNotEmpty({ message: 'O campo nome é obrigatório.' })
-  @IsString({ message: 'O campo nome é inválido.' })
-  name: string;
+export class UpdatePasswordDto {
+  @ApiProperty({ type: String, required: false })
+  @IsOptional()
+  @IsString({ message: 'O campo senha atual é inválido.' })
+  oldPassword?: string;
 
   @ApiProperty({ type: String, required: true })
-  @IsNotEmpty({ message: 'O campo e-mail é obrigatório.' })
-  @IsEmail({}, { message: 'O e-mail fornecido é inválido.' })
-  email: string;
-
-  @ApiProperty({ type: String, required: true })
-  @IsNotEmpty({ message: 'O campo senha é obrigatório.' })
-  @IsString({ message: 'O campo senha é inválido.' })
+  @IsNotEmpty({ message: 'O campo nova senha é obrigatório.' })
+  @IsString({ message: 'O campo nova senha é inválido.' })
   @MinLength(passwordRequirements.minLength, {
-    message: `O campo senha deve conter no mínimo ${passwordRequirements.minLength} caracteres.`,
+    message: `O campo nova senha deve conter no mínimo ${passwordRequirements.minLength} caracteres.`,
   })
   @MaxLength(passwordRequirements.maxLength, {
-    message: `O campo senha deve conter no máximo ${passwordRequirements.maxLength} caracteres.`,
+    message: `O campo nova senha deve conter no máximo ${passwordRequirements.maxLength} caracteres.`,
   })
   @IsStrongPassword(
     {
@@ -42,7 +36,7 @@ export class CreateUserDto {
     },
     {
       message:
-        'O campo senha deve conter pelo menos 1 letra minúscula, 1 maiúscula, 1 número e 1 caractere especial.',
+        'O campo nova senha deve conter pelo menos 1 letra minúscula, 1 maiúscula, 1 número e 1 caractere especial.',
     },
   )
   password: string;
@@ -74,18 +68,4 @@ export class CreateUserDto {
     message: 'O campo confirmação de senha não confere com o campo senha.',
   })
   passwordConfirmation: string;
-
-  @ApiProperty({ type: String, required: false })
-  @IsOptional()
-  @IsString({ message: 'O campo telefone é inválido.' })
-  phone?: string;
-
-  @ApiProperty({
-    description: 'User role',
-    enum: ['USER', 'ADMIN'],
-    required: false,
-  })
-  @IsOptional()
-  @IsString({ message: 'O campo role é inválido.' })
-  role?: string;
 }

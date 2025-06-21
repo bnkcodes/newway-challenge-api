@@ -5,7 +5,6 @@ export const EnvironmentVariablesSchema = Joi.object({
   FRONT_WEB_URL: Joi.string().required(),
   SERVER_URL: Joi.string().required(),
   PORT: Joi.number().required(),
-  UPLOAD_FILE_LIMIT_SIZE: Joi.string().required(),
   STORAGE_DRIVER: Joi.string().required(),
   TOKEN_DRIVER: Joi.string().required(),
   CRYPTOGRAPHY_DRIVER: Joi.string().required(),

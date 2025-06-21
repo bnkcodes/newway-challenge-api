@@ -1,4 +1,4 @@
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -17,11 +17,13 @@ import {
   FileTypeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserRole } from '@prisma/client';
 
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { ListUsersInput } from './dtos/list-users.dto';
 import { CollectionInput } from '@/shared/infra/dto/collection.dto';
+import { AllowPublicAccess, Authenticated, Role } from '@/shared/decorators';
 
 import {
   UserCollectionPresenter,
@@ -31,12 +33,14 @@ import {
 
 import { UserFacade } from '../user.facade';
 
+@ApiBearerAuth()
 @Controller('/users')
 export class UsersController {
   @Inject(UserFacade.name)
   private userFacade: UserFacade;
 
   @Post('/')
+  @AllowPublicAccess()
   @ApiOperation({ summary: 'Create user' })
   @ApiResponse({ status: 201, type: UserPresenterWrapper })
   async createUser(
@@ -53,7 +57,22 @@ export class UsersController {
     };
   }
 
+  @Get('/me')
+  @Role(UserRole.USER)
+  @ApiOperation({ summary: 'Get authenticated user data' })
+  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  async getMe(@Authenticated() user: any): Promise<UserPresenterWrapper> {
+    const data = await this.userFacade.getUserUseCase.execute({
+      id: user.id,
+    });
+
+    return {
+      user: UserPresenter.toPresenter(data.user),
+    };
+  }
+
   @Get('/:id')
+  @Role(UserRole.USER)
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async getUser(@Param('id') id: string): Promise<UserPresenterWrapper> {
@@ -65,6 +84,7 @@ export class UsersController {
   }
 
   @Get('/')
+  @Role(UserRole.ADMIN)
   @ApiOperation({ summary: 'List users' })
   @ApiResponse({ status: 200, type: UserCollectionPresenter })
   async listUsers(
@@ -94,8 +114,27 @@ export class UsersController {
     );
   }
 
+  @Put('/me')
+  @Role(UserRole.USER)
+  @ApiOperation({ summary: 'Update authenticated user' })
+  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  async updateMe(
+    @Authenticated() user: any,
+    @Body() input: UpdateUserDto,
+  ): Promise<UserPresenterWrapper> {
+    const data = await this.userFacade.updateUserUseCase.execute({
+      id: user.id,
+      ...input,
+    });
+
+    return {
+      user: UserPresenter.toPresenter(data.user),
+    };
+  }
+
   @Put('/:id')
-  @ApiOperation({ summary: 'Update user' })
+  @Role(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async updateUser(
     @Param('id') id: string,
@@ -111,8 +150,19 @@ export class UsersController {
     };
   }
 
+  @Delete('/me')
+  @Role(UserRole.USER)
+  @ApiOperation({ summary: 'Delete authenticated user account' })
+  @ApiResponse({ status: 200, description: 'User deleted successfully' })
+  async deleteMe(@Authenticated() user: any): Promise<{ success: boolean }> {
+    await this.userFacade.deleteUserUseCase.execute(user.id);
+
+    return { success: true };
+  }
+
   @Delete('/:id')
-  @ApiOperation({ summary: 'Delete user' })
+  @Role(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   async deleteUser(@Param('id') id: string): Promise<{ success: boolean }> {
     await this.userFacade.deleteUserUseCase.execute(id);
@@ -120,8 +170,36 @@ export class UsersController {
     return { success: true };
   }
 
+  @Patch('/me/upload-image')
+  @Role(UserRole.USER)
+  @ApiOperation({ summary: 'Upload authenticated user image' })
+  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadMyImage(
+    @Authenticated() user: any,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 3 * 1000 * 1000 }), // 3MB
+          new FileTypeValidator({ fileType: 'image' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ): Promise<UserPresenterWrapper> {
+    const data = await this.userFacade.uploadImageUseCase.execute({
+      id: user.id,
+      file,
+    });
+
+    return {
+      user: UserPresenter.toPresenter(data.user),
+    };
+  }
+
   @Patch('/:id/upload-image')
-  @ApiOperation({ summary: 'Upload user image' })
+  @Role(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Upload user image by ID' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
@@ -146,8 +224,25 @@ export class UsersController {
     };
   }
 
+  @Patch('/me/delete-image')
+  @Role(UserRole.USER)
+  @ApiOperation({ summary: 'Delete authenticated user image' })
+  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  async deleteMyImage(
+    @Authenticated() user: any,
+  ): Promise<UserPresenterWrapper> {
+    const data = await this.userFacade.deleteImageUseCase.execute({
+      id: user.id,
+    });
+
+    return {
+      user: UserPresenter.toPresenter(data.user),
+    };
+  }
+
   @Patch('/:id/delete-image')
-  @ApiOperation({ summary: 'Delete user image' })
+  @Role(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Delete user image by ID' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async deleteImage(@Param('id') id: string): Promise<UserPresenterWrapper> {
     const data = await this.userFacade.deleteImageUseCase.execute({ id });

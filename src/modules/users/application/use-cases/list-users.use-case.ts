@@ -21,10 +21,10 @@ interface ListUsersUseCaseInput {
 }
 
 interface ListUsersUseCaseOutput {
-    users: UserOutput[];
-    totalCount: number;
-    page: number;
-    pageSize: number;
+  users: UserOutput[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
 }
 
 export class ListUsersUseCase

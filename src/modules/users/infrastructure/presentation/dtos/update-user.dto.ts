@@ -3,20 +3,25 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 
 export class UpdateUserDto {
-  @ApiProperty({ description: 'User name', required: false })
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'O campo nome é inválido.' })
   name?: string;
 
-  @ApiProperty({ description: 'User email', required: false })
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
-  @IsEmail()
+  @IsEmail({}, { message: 'O e-mail fornecido é inválido.' })
   email?: string;
 
-  @ApiProperty({ description: 'User phone number', required: false })
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'O campo telefone é inválido.' })
   phone?: string;
+
+  @ApiProperty({ type: String, required: false })
+  @IsOptional()
+  @IsString({ message: 'O campo URL da imagem é inválido.' })
+  imageUrl?: string;
 
   @ApiProperty({
     description: 'User role',
@@ -24,6 +29,6 @@ export class UpdateUserDto {
     required: false,
   })
   @IsOptional()
-  @IsEnum(UserRole)
+  @IsEnum(UserRole, { message: 'O campo role deve ser USER ou ADMIN.' })
   role?: UserRole;
 }

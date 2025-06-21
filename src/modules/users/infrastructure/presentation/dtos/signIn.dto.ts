@@ -1,14 +1,14 @@
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MinLength } from 'class-validator';
 
-export class SignInInput {
+export class SignInDto {
   @ApiProperty({ type: String, required: true })
-  @IsEmail()
-  @IsString()
+  @IsNotEmpty({ message: 'O campo e-mail é obrigatório.' })
+  @IsEmail({}, { message: 'O e-mail fornecido é inválido.' })
   email: string;
 
-  @IsString()
-  @MinLength(6)
   @ApiProperty({ type: String, required: true })
+  @IsNotEmpty({ message: 'O campo senha é obrigatório.' })
+  @IsString({ message: 'O campo senha é inválido.' })
   password: string;
 }
