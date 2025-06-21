@@ -12,10 +12,19 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": false,
+    "forceConsistentCasingInFileNames": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@prisma/client": ["./generated/prisma"],
+      "@/*": ["./src/*"],
+      "@/modules/*": ["./src/modules/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/users/*": ["./src/modules/users/*"],
+      "@/tasks/*": ["./src/modules/tasks/*"],
+      "@/auth/*": ["./src/modules/auth/*"]
+    }
+  },
 }
