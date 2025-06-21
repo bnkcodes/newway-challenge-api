@@ -1,97 +1,86 @@
 import { UserRole } from '@prisma/client';
 
-export class User {
-  private readonly _id: string;
-  private _name: string;
-  private _email: string;
-  private _phone: string | null;
-  private _password: string;
-  private _imageUrl: string | null;
-  private _role: UserRole;
-  private _createdAt: Date;
-  private _updatedAt: Date;
-  private _deletedAt: Date | null;
+import { Entity } from '@/shared/domain/entities/entity';
+import { UserRules } from './user.validator';
 
-  constructor(props: {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    phone?: string | null;
-    imageUrl?: string | null;
-    role?: UserRole;
-    createdAt?: Date;
-    updatedAt?: Date;
-    deletedAt?: Date | null;
-  }) {
-    this._id = props.id;
-    this._name = props.name;
-    this._email = props.email;
-    this._password = props.password;
-    this._phone = props.phone ?? null;
-    this._imageUrl = props.imageUrl ?? null;
-    this._role = props.role ?? UserRole.USER;
-    this._createdAt = props.createdAt ?? new Date();
-    this._updatedAt = props.updatedAt ?? new Date();
-    this._deletedAt = props.deletedAt ?? null;
+export type UserProps = {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string | null;
+  imageUrl?: string | null;
+  role?: UserRole;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date | null;
+};
+
+export class UserEntity extends Entity<UserProps> {
+  get name(): string {
+    return this.props.name;
+  }
+
+  get email(): string {
+    return this.props.email;
   }
 
   get password(): string {
-    return this._password;
+    return this.props.password;
   }
 
-  get role(): UserRole {
-    return this._role;
+  get imageUrl(): string | null {
+    return this.props.imageUrl;
   }
 
   get isDeleted(): boolean {
-    return this._deletedAt !== null;
+    return this.props.deletedAt !== null;
   }
 
   get isAdmin(): boolean {
-    return this._role === UserRole.ADMIN;
+    return this.props.role === UserRole.ADMIN;
   }
 
   private _updateTimestamp(): void {
-    this._updatedAt = new Date();
+    this.props.updatedAt = new Date();
   }
 
-  setPassword(password: string): void {
-    this._password = password;
+  update(updates: Partial<UserProps>): void {
+    // Garantir que o email seja sempre lowercase
+    if (updates.email) {
+      updates.email = updates.email.toLowerCase();
+    }
+
+    Object.assign(this.props, updates);
     this._updateTimestamp();
   }
 
-  setRole(role: UserRole): void {
-    this._role = role;
+  delete(): void {
+    this.props.deletedAt = new Date();
     this._updateTimestamp();
   }
 
-  update(
-    updates: Partial<{
-      name: string;
-      email: string;
-      phone: string | null;
-      password: string;
-      imageUrl: string | null;
-      role: UserRole;
-    }>,
-  ): void {
-    Object.assign(this, updates);
+  restore(): void {
+    this.props.deletedAt = null;
     this._updateTimestamp();
   }
 
-  toJSON() {
-    return {
-      id: this._id,
-      name: this._name,
-      email: this._email,
-      phone: this._phone,
-      password: this._password,
-      imageUrl: this._imageUrl,
-      role: this._role,
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
-      deletedAt: this._deletedAt,
-    };
+  constructor(props: UserProps, id?: string) {
+    UserEntity._validate(props);
+
+    super(
+      {
+        ...props,
+        email: props.email.toLowerCase(),
+        role: props.role ?? UserRole.USER,
+        createdAt: props.createdAt ?? new Date(),
+        updatedAt: props.updatedAt ?? new Date(),
+        deletedAt: props.deletedAt ?? null,
+      },
+      id,
+    );
+  }
+
+  static _validate(props: ConstructorParameters<typeof UserEntity>[0]) {
+    UserRules.validate(props);
   }
 }
