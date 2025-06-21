@@ -14,7 +14,7 @@ export class AuthController {
 
   @Post('login')
   @AllowPublicAccess()
-  @ApiOperation({ summary: 'Autenticar usuário' })
+  @ApiOperation({ summary: 'Authenticate user' })
   @ApiResponse({
     status: 200,
     schema: { example: { accessToken: 'jwt-token', user: {} } },

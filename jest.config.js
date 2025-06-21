@@ -21,7 +21,7 @@ module.exports = {
     'test',
     'coverage',
   ],
-  coverageDirectory: '../coverage',
+  coverageDirectory: './coverage',
   testEnvironment: 'node',
   moduleNameMapper: {
     '^@/users/(.*)$': '<rootDir>/src/modules/users/$1',

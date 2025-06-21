@@ -7,10 +7,7 @@ import { TokenModule } from '@/shared/providers/token/token.module';
 import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 import { IStorageProvider } from '@/shared/providers/storage';
 import { ITokenProvider } from '@/shared/providers/token/interface/ITokenProvider';
-import {
-  EnvironmentVariables,
-  EnvironmentVariablesType,
-} from '@/config/env';
+import { EnvironmentVariables, EnvironmentVariablesType } from '@/config/env';
 
 import { UserRepositoryName } from './domain/user.repository';
 
