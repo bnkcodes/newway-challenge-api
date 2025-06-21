@@ -245,7 +245,9 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete user image by ID' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async deleteImage(@Param('id') id: string): Promise<UserPresenterWrapper> {
-    const data = await this.userFacade.deleteImageUseCase.execute({ id });
+    const data = await this.userFacade.deleteImageUseCase.execute({
+      id,
+    });
 
     return {
       user: UserPresenter.toPresenter(data.user),

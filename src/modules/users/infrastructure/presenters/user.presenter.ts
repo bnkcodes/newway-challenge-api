@@ -31,7 +31,10 @@ export class UserPresenter {
   @ApiProperty({ type: Date, required: false, nullable: true })
   deletedAt: Date | null;
 
-  static toPresenter(output: UserOutput): UserPresenter {
+  @ApiProperty({ type: String, required: false })
+  password?: string;
+
+  static toPresenter(output: UserOutput, withPassword = false): UserPresenter {
     const user: UserPresenter = {
       id: output.id,
       name: output.name,
@@ -42,13 +45,17 @@ export class UserPresenter {
       createdAt: output.createdAt,
       updatedAt: output.updatedAt,
       deletedAt: output.deletedAt,
+      password: withPassword ? output.password : undefined,
     };
 
     return user;
   }
 
-  static toManyPresenter(outputs: UserOutput[]): UserPresenter[] {
-    return outputs.map((output) => this.toPresenter(output));
+  static toManyPresenter(
+    outputs: UserOutput[],
+    withPassword = false,
+  ): UserPresenter[] {
+    return outputs.map((output) => this.toPresenter(output, withPassword));
   }
 }
 

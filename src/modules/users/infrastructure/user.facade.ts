@@ -1,6 +1,7 @@
 import { UserRepository } from '@/users/domain/user.repository';
 import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 import { IStorageProvider } from '@/shared/providers/storage';
+import { ITokenProvider } from '@/shared/providers/token/interface/ITokenProvider';
 
 import { CreateUserUseCase } from '@/users/application/use-cases/create-user.use-case';
 import { DeleteUserUseCase } from '@/users/application/use-cases/delete-user.use-case';
@@ -10,6 +11,7 @@ import { UpdateUserUseCase } from '@/users/application/use-cases/update-user.use
 import { UpdatePasswordUseCase } from '@/users/application/use-cases/update-password.use-case';
 import { UploadImageUseCase } from '@/users/application/use-cases/upload-image.use-case';
 import { DeleteImageUseCase } from '@/users/application/use-cases/delete-image.use-case';
+import { LoginUseCase } from '@/users/application/use-cases/login.use-case';
 
 export class UserFacade {
   createUserUseCase: CreateUserUseCase;
@@ -20,11 +22,15 @@ export class UserFacade {
   updatePasswordUseCase: UpdatePasswordUseCase;
   uploadImageUseCase: UploadImageUseCase;
   deleteImageUseCase: DeleteImageUseCase;
+  loginUseCase: LoginUseCase;
 
   constructor(
     private readonly userRepository: UserRepository,
     private readonly cryptographyProvider: ICryptographyProvider,
     private readonly storageProvider: IStorageProvider,
+    private readonly tokenProvider: ITokenProvider,
+    private readonly jwtSecret: string,
+    private readonly jwtExpiresIn: string,
   ) {
     if (!userRepository) {
       throw new Error('Error instantiating UserFacade: no userRepository');
@@ -36,6 +42,9 @@ export class UserFacade {
     }
     if (!storageProvider) {
       throw new Error('Error instantiating UserFacade: no storageProvider');
+    }
+    if (!tokenProvider) {
+      throw new Error('Error instantiating UserFacade: no tokenProvider');
     }
 
     this.createUserUseCase = new CreateUserUseCase(
@@ -57,6 +66,13 @@ export class UserFacade {
     this.deleteImageUseCase = new DeleteImageUseCase(
       userRepository,
       storageProvider,
+    );
+    this.loginUseCase = new LoginUseCase(
+      userRepository,
+      cryptographyProvider,
+      tokenProvider,
+      jwtSecret,
+      jwtExpiresIn,
     );
   }
 }
