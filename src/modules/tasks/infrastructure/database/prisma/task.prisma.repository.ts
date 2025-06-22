@@ -33,12 +33,17 @@ export class TaskPrismaRepository implements TaskRepository {
     });
   }
 
+  async delete(filter: { id: string }): Promise<void> {
+    await this.prisma.task.delete({
+      where: { id: filter.id },
+    });
+  }
+
   async findOne(filter: TaskRepositoryFilter): Promise<TaskEntity | undefined> {
     const task = await this.prisma.task.findFirst({
       where: {
         id: filter?.id,
         userId: filter?.userId,
-        deletedAt: filter.withDeleted ? undefined : null,
       },
     });
     return task ? TaskPrismaMapper.toEntity(task) : undefined;
@@ -54,7 +59,6 @@ export class TaskPrismaRepository implements TaskRepository {
       this.prisma.task.findMany({
         where: {
           ...filter,
-          deletedAt: filter?.withDeleted ? undefined : null,
         },
         skip: (page - 1) * pageSize,
         take: pageSize,
@@ -62,7 +66,6 @@ export class TaskPrismaRepository implements TaskRepository {
       this.prisma.task.count({
         where: {
           ...filter,
-          deletedAt: filter?.withDeleted ? undefined : null,
         },
       }),
     ]);

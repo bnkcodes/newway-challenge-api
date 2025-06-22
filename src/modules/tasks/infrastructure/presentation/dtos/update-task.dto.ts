@@ -22,5 +22,5 @@ export class UpdateTaskDto {
   @ApiProperty({ required: false })
   @IsDateString()
   @IsOptional()
-  dueDate?: Date;
+  dueDate?: string;
 }

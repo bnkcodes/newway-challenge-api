@@ -12,6 +12,7 @@ describe('LoginUseCase', () => {
   let userRepository: UserRepository;
   let cryptographyProvider: ICryptographyProvider;
   let tokenProvider: ITokenProvider;
+  let mockConfig: any;
 
   const mockUser = new UserEntity({
     name: 'Test User',
@@ -33,12 +34,18 @@ describe('LoginUseCase', () => {
       sign: jest.fn(),
     } as any;
 
+    mockConfig = {
+      jwt: {
+        secret: 'jwt-secret',
+        expiresIn: '7d',
+      },
+    };
+
     loginUseCase = new LoginUseCase(
+      mockConfig,
       userRepository,
       cryptographyProvider,
       tokenProvider,
-      'jwt-secret',
-      '7d',
     );
   });
 

@@ -12,9 +12,9 @@ describe('TaskOutputMapper', () => {
 
   describe('fromEntity', () => {
     it('should map task entity to output', () => {
-      const result = TaskOutputMapper.fromEntity(task);
+      const taskOutput = TaskOutputMapper.fromEntity(task);
 
-      expect(result).toEqual({
+      expect(taskOutput).toEqual({
         id: task.id,
         title: task.title,
         description: task.description,
@@ -23,7 +23,6 @@ describe('TaskOutputMapper', () => {
         userId: task.userId,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
-        deletedAt: task.deletedAt,
       });
     });
   });

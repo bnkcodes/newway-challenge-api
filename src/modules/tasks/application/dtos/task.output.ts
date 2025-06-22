@@ -15,7 +15,6 @@ export class TaskOutputMapper {
       userId: entity.userId,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-      deletedAt: entity.deletedAt,
     };
   }
 

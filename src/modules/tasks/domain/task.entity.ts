@@ -12,7 +12,6 @@ export type TaskProps = {
   userId: string;
   createdAt?: Date;
   updatedAt?: Date;
-  deletedAt?: Date | null;
 };
 
 export class TaskEntity extends Entity<TaskProps> {
@@ -44,26 +43,12 @@ export class TaskEntity extends Entity<TaskProps> {
     return this.props.updatedAt;
   }
 
-  get deletedAt(): Date | null {
-    return this.props.deletedAt;
-  }
-
   private _updateTimestamp(): void {
     this.props.updatedAt = new Date();
   }
 
   update(updates: Partial<TaskProps>): void {
     Object.assign(this.props, updates);
-    this._updateTimestamp();
-  }
-
-  delete(): void {
-    this.props.deletedAt = new Date();
-    this._updateTimestamp();
-  }
-
-  restore(): void {
-    this.props.deletedAt = null;
     this._updateTimestamp();
   }
 
@@ -76,7 +61,6 @@ export class TaskEntity extends Entity<TaskProps> {
         description: props.description ?? null,
         createdAt: props.createdAt ?? new Date(),
         updatedAt: props.updatedAt ?? new Date(),
-        deletedAt: props.deletedAt ?? null,
       },
       id,
     );

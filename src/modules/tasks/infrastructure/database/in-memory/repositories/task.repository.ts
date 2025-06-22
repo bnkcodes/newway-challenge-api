@@ -20,6 +20,7 @@ export class InMemoryTaskRepository implements TaskRepository {
 
   create = (entity: TaskEntity) => this.memoRepo.create(entity);
   update = (entity: TaskEntity) => this.memoRepo.update(entity);
+  delete = (filter: { id: string }) => this.memoRepo.delete(filter);
   findOne = (filter: TaskRepositoryFilter) => this.memoRepo.findOne(filter);
 
   async findMany(
@@ -28,9 +29,6 @@ export class InMemoryTaskRepository implements TaskRepository {
   ) {
     const allData = this.items.filter((item) => {
       if (filter?.userId && item.userId !== filter.userId) {
-        return false;
-      }
-      if (!filter?.withDeleted && !!item.deletedAt) {
         return false;
       }
       return true;

@@ -13,7 +13,6 @@ export class TaskPrismaMapper {
         userId: model.userId,
         createdAt: model.createdAt,
         updatedAt: model.updatedAt,
-        deletedAt: model.deletedAt,
       },
       model.id,
     );

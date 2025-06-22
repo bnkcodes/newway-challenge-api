@@ -38,18 +38,7 @@ export class UserPrismaRepository implements UserRepository {
 
   async create(entity: UserEntity): Promise<UserEntity> {
     const user = await this.prisma.user.create({
-      data: {
-        id: entity.id,
-        name: entity.name,
-        email: entity.email,
-        password: entity.password,
-        phone: entity.phone,
-        imageUrl: entity.imageUrl,
-        role: entity.role,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-        deletedAt: entity.deletedAt,
-      },
+      data: entity.props,
     });
 
     return new UserEntity(user, user.id);
@@ -127,18 +116,13 @@ export class UserPrismaRepository implements UserRepository {
   async update(entity: UserEntity): Promise<void> {
     await this.prisma.user.update({
       where: { id: entity.id },
-      data: {
-        id: entity.id,
-        name: entity.name,
-        email: entity.email,
-        password: entity.password,
-        phone: entity.phone,
-        imageUrl: entity.imageUrl,
-        role: entity.role,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-        deletedAt: entity.deletedAt,
-      },
+      data: entity.props,
+    });
+  }
+
+  async delete(filter: { id: string }): Promise<void> {
+    await this.prisma.user.delete({
+      where: { id: filter.id },
     });
   }
 }

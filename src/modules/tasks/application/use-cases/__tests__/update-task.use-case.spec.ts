@@ -1,4 +1,4 @@
-import { TaskStatus } from '@prisma/client';
+import { TaskStatus, UserRole } from '@prisma/client';
 
 import { ErrorException } from '@/shared/infra/error/error-exception';
 import { TaskEntity } from '@/tasks/domain/task.entity';
@@ -25,6 +25,7 @@ describe('UpdateTaskUseCase', () => {
     const input = {
       id: task.id,
       userId,
+      userRole: UserRole.USER,
       title: 'Updated Title',
       description: 'Updated Description',
       status: TaskStatus.COMPLETED,
@@ -42,6 +43,7 @@ describe('UpdateTaskUseCase', () => {
     const promise = sut.execute({
       id: 'non-existing-id',
       userId,
+      userRole: UserRole.USER,
       title: 'any',
     });
     await expect(promise).rejects.toBeInstanceOf(ErrorException);
@@ -52,8 +54,26 @@ describe('UpdateTaskUseCase', () => {
     const promise = sut.execute({
       id: task.id,
       userId: 'another-user-id',
+      userRole: UserRole.USER,
       title: 'any',
     });
-    await expect(promise).rejects.toThrow('Task not found');
+    await expect(promise).rejects.toBeInstanceOf(ErrorException);
+    await expect(promise).rejects.toThrow(
+      'Você não possui permissão para acessar esta tarefa.',
+    );
+  });
+
+  it('should allow admin to update any task', async () => {
+    const input = {
+      id: task.id,
+      userId: 'admin-user-id',
+      userRole: UserRole.ADMIN,
+      title: 'Updated by Admin',
+    };
+
+    const result = await sut.execute(input);
+
+    expect(result.task.title).toBe(input.title);
+    expect(taskRepository.items[0].title).toBe(input.title);
   });
 });
