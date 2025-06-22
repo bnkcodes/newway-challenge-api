@@ -6,7 +6,6 @@ import { ITokenProvider } from '@/shared/providers/token/interface/ITokenProvide
 
 import { UserRepository } from '@/users/domain/user.repository';
 import { CreateUserUseCase } from '@/users/application/use-cases/create-user.use-case';
-import { DeleteUserUseCase } from '@/users/application/use-cases/delete-user.use-case';
 import { GetUserUseCase } from '@/users/application/use-cases/get-user.use-case';
 import { ListUsersUseCase } from '@/users/application/use-cases/list-users.use-case';
 import { UpdateUserUseCase } from '@/users/application/use-cases/update-user.use-case';
@@ -17,7 +16,6 @@ import { LoginUseCase } from '@/users/application/use-cases/login.use-case';
 
 export class UserFacade {
   createUserUseCase: CreateUserUseCase;
-  deleteUserUseCase: DeleteUserUseCase;
   getUserUseCase: GetUserUseCase;
   listUsersUseCase: ListUsersUseCase;
   updateUserUseCase: UpdateUserUseCase;
@@ -52,7 +50,6 @@ export class UserFacade {
       userRepository,
       cryptographyProvider,
     );
-    this.deleteUserUseCase = new DeleteUserUseCase(userRepository);
     this.getUserUseCase = new GetUserUseCase(userRepository);
     this.listUsersUseCase = new ListUsersUseCase(userRepository);
     this.updateUserUseCase = new UpdateUserUseCase(userRepository);

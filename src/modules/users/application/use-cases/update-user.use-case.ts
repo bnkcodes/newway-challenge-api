@@ -16,6 +16,7 @@ interface UpdateUserUseCaseInput {
   email?: string;
   phone?: string;
   role?: UserRole;
+  isActive?: boolean;
 }
 
 interface UpdateUserUseCaseOutput {
@@ -59,7 +60,21 @@ export class UpdateUserUseCase
       }
     }
 
-    user.update(input);
+    if (input.isActive !== undefined) {
+      const isCurrentlyActive = !user.isDeleted;
+
+      if (input.isActive === isCurrentlyActive) {
+        throw new ErrorException(
+          ErrorCode.BadRequest,
+          `Error updating user: User is already ${input.isActive ? 'active' : 'inactive'}`,
+        );
+      }
+
+      if (input.isActive) user.restore();
+      else user.delete();
+    } else {
+      user.update(input);
+    }
 
     await this.userRepository.update(user).catch((error) => {
       throw new ErrorException(

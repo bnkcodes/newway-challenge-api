@@ -2,7 +2,6 @@ import { ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Inject,
   Param,
@@ -149,23 +148,20 @@ export class UsersController {
     };
   }
 
-  @Delete('/me')
-  @ApiOperation({ summary: 'Delete authenticated user account' })
-  @ApiResponse({ status: 200, description: 'User deleted successfully' })
-  async deleteMe(@Authenticated() user: any): Promise<{ success: boolean }> {
-    await this.userFacade.deleteUserUseCase.execute(user.id);
+  @Patch('/me/deactivate')
+  @ApiOperation({ summary: 'Deactivate authenticated user account' })
+  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  async deactivateMe(
+    @Authenticated() user: any,
+  ): Promise<UserPresenterWrapper> {
+    const data = await this.userFacade.updateUserUseCase.execute({
+      id: user.id,
+      isActive: false,
+    });
 
-    return { success: true };
-  }
-
-  @Delete('/:id')
-  @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Delete user by ID' })
-  @ApiResponse({ status: 200, description: 'User deleted successfully' })
-  async deleteUser(@Param('id') id: string): Promise<{ success: boolean }> {
-    await this.userFacade.deleteUserUseCase.execute(id);
-
-    return { success: true };
+    return {
+      user: UserPresenter.toPresenter(data.user),
+    };
   }
 
   @Patch('/me/upload-image')
@@ -243,6 +239,36 @@ export class UsersController {
   async deleteImage(@Param('id') id: string): Promise<UserPresenterWrapper> {
     const data = await this.userFacade.deleteImageUseCase.execute({
       id,
+    });
+
+    return {
+      user: UserPresenter.toPresenter(data.user),
+    };
+  }
+
+  @Patch('/:id/activate')
+  @Role(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Activate user by ID' })
+  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  async activateUser(@Param('id') id: string): Promise<UserPresenterWrapper> {
+    const data = await this.userFacade.updateUserUseCase.execute({
+      id,
+      isActive: true,
+    });
+
+    return {
+      user: UserPresenter.toPresenter(data.user),
+    };
+  }
+
+  @Patch('/:id/deactivate')
+  @Role(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Deactivate user by ID' })
+  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  async deactivateUser(@Param('id') id: string): Promise<UserPresenterWrapper> {
+    const data = await this.userFacade.updateUserUseCase.execute({
+      id,
+      isActive: false,
     });
 
     return {
