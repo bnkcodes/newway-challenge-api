@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      target: build
+    container_name: newway_challenge_api
+    tty: true
+    ports:
+      - 3000:3000
+      - 5555:5555
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: yarn start:dev
+    depends_on:
+      - postgresql
+    networks:
+      - newway-network
+
+  postgresql:
+    image: postgres:16-alpine
+    container_name: newway_postgresql
+    ports:
+      - "5432:5432"
+    tty: true
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=newway_challenge
+    networks:
+      - newway-network
+
+networks:
+  newway-network:
+    driver: bridge

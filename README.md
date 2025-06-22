@@ -1,98 +1,106 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# New Way Challenge - API de Gerenciamento de Tarefas
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Esta é a API para o desafio da New Way, desenvolvida em Nest.js para gerenciar usuários e suas respectivas tarefas.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tecnologias Utilizadas
 
-## Description
+- **Backend:** [Nest.js](https://nestjs.com/)
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
+- **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/)
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Containerização:** [Docker](https://www.docker.com/)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## Pré-requisitos
+
+Antes de começar, garanta que você tenha o [Docker](https://www.docker.com/products/docker-desktop/) e o Docker Compose instalados em sua máquina.
+
+---
+
+## Como Executar o Projeto
+
+Siga os passos abaixo para configurar e rodar o ambiente de desenvolvimento.
+
+### 1. Clone o Repositório
 
 ```bash
-$ yarn install
+git clone https://github.com/bnkcodes/newway-challenge-api.git
+cd newway-challenge-api
 ```
 
-## Compile and run the project
+### 2. Configure as Variáveis de Ambiente
+
+Este projeto usa o arquivo `.env.example` como um template para as variáveis de ambiente.
+
+Primeiro, copie o arquivo de exemplo para criar seu próprio arquivo `.env`:
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+cp .env.example .env
 ```
 
-## Run tests
+Agora, abra o arquivo `.env` recém-criado e preencha as variáveis necessárias, como `JWT_SECRET` e as credenciais para o serviço de armazenamento de sua escolha (S3 ou Bunny). A `DATABASE_URL` já vem configurada corretamente para o ambiente Docker.
+
+### 3. Inicie os Contêineres
+
+Use o Docker Compose para construir as imagens e iniciar a aplicação e o banco de dados em segundo plano.
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+docker-compose up -d --build
 ```
 
-## Deployment
+### 4. Aplique as Migrações do Banco de Dados
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Com os contêineres em execução, execute o script para criar as tabelas no banco de dados.
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+yarn docker:migrate
+```
+*O Prisma pode pedir para você dar um nome para a migração inicial (ex: `init`).*
+
+### 5. Crie um Usuário Administrador
+
+Para popular o banco com um usuário administrador, execute o seguinte script:
+
+```bash
+yarn docker:seed
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Acesso à Aplicação
 
-Check out a few resources that may come in handy when working with NestJS:
+- **URL Base da API:** `http://localhost:3000`
+- **Documentação (Swagger):** `http://localhost:3000/doc/api`
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## Comandos Úteis para o Dia a Dia
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Todos os comandos abaixo devem ser executados com os contêineres já iniciados (`docker-compose up -d`).
 
-## Stay in touch
+- **Abrir o Prisma Studio (Interface visual do banco de dados):**
+  ```bash
+  yarn docker:studio
+  ```
+  Depois de executar, acesse `http://localhost:5555` no seu navegador.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **Executar todos os testes:**
+  ```bash
+  yarn docker:test
+  ```
 
-## License
+- **Ver Logs da Aplicação em Tempo Real:**
+  ```bash
+  docker-compose logs -f app
+  ```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **Parar todos os contêineres:**
+  ```bash
+  docker-compose down
+  ```
+
+- **Parar contêineres e remover volumes (para limpar o banco de dados):**
+  ```bash
+  docker-compose down -v
+  ```
