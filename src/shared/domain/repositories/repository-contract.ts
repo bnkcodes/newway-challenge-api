@@ -5,7 +5,7 @@ export interface RepositoryInterface<
 > {
   create(entity: T): Promise<T>;
   update(entity: T): Promise<void>;
-  findById(id: string, companyId?: string): Promise<T | undefined>;
+  findById?(id: string): Promise<T | undefined>;
   findOne(filter: FilterOneType): Promise<T | undefined>;
   findMany(
     filter?: FilterManyType,

@@ -13,8 +13,8 @@ import { UserRepositoryName } from './domain/user.repository';
 
 import { UserPrismaRepository } from './infrastructure/database/prisma/user.prisma.repository';
 import { UsersController } from './infrastructure/presentation/users.controller';
-import { UserFacade } from './infrastructure/user.facade';
 import { AuthController } from './infrastructure/presentation/auth.controller';
+import { UserFacade } from './infrastructure/user.facade';
 
 @Module({
   imports: [CryptographyModule, StorageModule, TokenModule],
@@ -48,5 +48,6 @@ import { AuthController } from './infrastructure/presentation/auth.controller';
       ],
     },
   ],
+  exports: [UserRepositoryName],
 })
 export class UserModule {}

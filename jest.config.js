@@ -24,6 +24,7 @@ module.exports = {
   coverageDirectory: './coverage',
   testEnvironment: 'node',
   moduleNameMapper: {
+    '^@/tasks/(.*)$': '<rootDir>/src/modules/tasks/$1',
     '^@/users/(.*)$': '<rootDir>/src/modules/users/$1',
     '^@/shared/(.*)$': '<rootDir>/src/shared/$1',
     '^@/(.*)$': '<rootDir>/src/$1',

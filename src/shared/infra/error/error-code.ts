@@ -5,4 +5,5 @@ export enum ErrorCode {
   Unauthorized = 'UNAUTHORIZED',
   ConflictError = 'CONFLICT_ERROR',
   InternalServerError = 'INTERNAL_SERVER_ERROR',
+  Forbidden = 'FORBIDDEN',
 }

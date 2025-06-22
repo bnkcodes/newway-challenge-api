@@ -49,22 +49,18 @@ enum TaskStatus {
 }
 
 model Task {
-  id String @id @default(uuid()) @db.Uuid
-
-  userId String @map("user_id") @db.Uuid
-
+  id          String     @id @default(uuid())
   title       String
   description String?
-  status      TaskStatus? @default(PENDING)
-  priority    String?
-  dueDate     DateTime? @map("due_date")
+  status      TaskStatus @default(PENDING)
+  dueDate     DateTime
 
-  completedAt DateTime? @map("completed_at")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
-  deletedAt   DateTime? @map("deleted_at")
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
   @@map("tasks")
 }
