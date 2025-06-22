@@ -38,7 +38,7 @@ export class LoginUseCase
       })
       .catch((error) => {
         throw new ErrorException(
-          ErrorCode.InternalServerError,
+          ErrorCode.NotFound,
           'Error finding user: ' + error.message,
         );
       });
