@@ -1,9 +1,10 @@
-import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
-import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
-import { GetUserUseCase } from '@/users/application/use-cases/get-user.use-case';
-import { UserEntity } from '@/users/domain/user.entity';
 import { ErrorException } from '@/shared/infra/error/error-exception';
 import { ErrorCode } from '@/shared/infra/error/error-code';
+
+import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
+import { GetUserUseCase } from '@/users/application/use-cases/get-user.use-case';
+import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
+import { UserEntity } from '@/users/domain/user.entity';
 
 describe('Get user', () => {
   let userInMemoryRepository: InMemoryUserRepository;
@@ -29,13 +30,13 @@ describe('Get user', () => {
         id: user.id,
         name: user.name,
         email: user.email,
-        password: user.password,
-        createdAt: user.props.createdAt,
-        updatedAt: user.props.updatedAt,
-        deletedAt: user.props.deletedAt,
-        imageUrl: user.props.imageUrl,
-        phone: user.props.phone,
-        role: user.props.role,
+        password: undefined,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        deletedAt: user.deletedAt,
+        imageUrl: user.imageUrl,
+        phone: user.phone,
+        role: user.role,
       },
     });
   });

@@ -1,10 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { AllowPublicAccess } from '@/shared/decorators/allow-public-access.decorator';
-import { UserPresenter } from '../presenters/user.presenter';
+
 import { UserFacade } from '../user.facade';
-import { Inject } from '@nestjs/common';
 import { LoginRequestDto } from '../dto/login-request.dto';
+import { UserPresenter } from '../presenters/user.presenter';
 
 @ApiTags('Auth')
 @Controller('auth')

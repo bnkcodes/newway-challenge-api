@@ -55,18 +55,6 @@ describe('InMemoryRepository', () => {
 
       expect(foundEntity).toStrictEqual(entity1);
     });
-
-    it('should not find an entity by its id when it is not from the same company', async () => {
-      const entity1 = new TestEntity(props, '1');
-      const entity2 = new TestEntity(props, '2');
-
-      await repository.create(entity1);
-      await repository.create(entity2);
-
-      const foundEntity = await repository.findById('1', '3');
-
-      expect(foundEntity).toBeUndefined();
-    });
   });
 
   describe('findOne', () => {

@@ -1,7 +1,7 @@
 import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
+import { ListUsersUseCase } from '@/users/application/use-cases/list-users.use-case';
 import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
 import { UserEntity } from '@/users/domain/user.entity';
-import { ListUsersUseCase } from '@/users/application/use-cases/list-users.use-case';
 
 describe('List users', () => {
   let userInMemoryRepository: InMemoryUserRepository;
@@ -35,13 +35,13 @@ describe('List users', () => {
         id: user.id,
         name: user.name,
         email: user.email,
-        password: user.password,
-        createdAt: user.props.createdAt,
-        updatedAt: user.props.updatedAt,
-        deletedAt: user.props.deletedAt,
-        imageUrl: user.props.imageUrl,
-        phone: user.props.phone,
-        role: user.props.role,
+        password: undefined,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        deletedAt: user.deletedAt,
+        imageUrl: user.imageUrl,
+        phone: user.phone,
+        role: user.role,
       })),
       totalCount: 3,
       page: 1,

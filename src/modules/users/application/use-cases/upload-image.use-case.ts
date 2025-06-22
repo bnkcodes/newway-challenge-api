@@ -1,7 +1,7 @@
 import { UseCase } from '@/shared/application/use-cases/use-case';
+import { IStorageProvider } from '@/shared/providers/storage';
 import { ErrorException } from '@/shared/infra/error/error-exception';
 import { ErrorCode } from '@/shared/infra/error/error-code';
-import { IStorageProvider } from '@/shared/providers/storage';
 
 import { UserRepository } from '@/users/domain/user.repository';
 import {

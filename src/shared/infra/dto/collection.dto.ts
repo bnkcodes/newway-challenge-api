@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class CollectionInput {
   @ApiProperty({ type: Number, required: false })

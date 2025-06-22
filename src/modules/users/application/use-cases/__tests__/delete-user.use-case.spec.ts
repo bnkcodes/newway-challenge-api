@@ -1,9 +1,10 @@
-import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
-import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
-import { UserEntity } from '@/users/domain/user.entity';
-import { DeleteUserUseCase } from '@/users/application/use-cases/delete-user.use-case';
 import { ErrorException } from '@/shared/infra/error/error-exception';
 import { ErrorCode } from '@/shared/infra/error/error-code';
+
+import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
+import { DeleteUserUseCase } from '@/users/application/use-cases/delete-user.use-case';
+import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
+import { UserEntity } from '@/users/domain/user.entity';
 
 describe('Delete user', () => {
   let userInMemoryRepository: InMemoryUserRepository;

@@ -1,7 +1,8 @@
-import { registerDecorator, ValidationOptions } from 'class-validator';
 import {
-  ValidationArguments,
+  registerDecorator,
+  ValidationOptions,
   ValidatorConstraint,
+  ValidationArguments,
   ValidatorConstraintInterface,
 } from 'class-validator';
 

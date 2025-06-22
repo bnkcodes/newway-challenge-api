@@ -1,9 +1,11 @@
-import { LoginUseCase } from '../login.use-case';
-import { UserRepository } from '@/users/domain/user.repository';
+import { UserRole } from '@prisma/client';
+
 import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 import { ITokenProvider } from '@/shared/providers/token/interface/ITokenProvider';
+
+import { LoginUseCase } from '@/users/application/use-cases/login.use-case';
+import { UserRepository } from '@/users/domain/user.repository';
 import { UserEntity } from '@/users/domain/user.entity';
-import { UserRole } from '@prisma/client';
 
 describe('LoginUseCase', () => {
   let loginUseCase: LoginUseCase;

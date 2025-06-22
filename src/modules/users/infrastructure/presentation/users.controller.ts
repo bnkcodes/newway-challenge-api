@@ -19,11 +19,12 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserRole } from '@prisma/client';
 
+import { AllowPublicAccess, Authenticated, Role } from '@/shared/decorators';
+import { CollectionInput } from '@/shared/infra/dto/collection.dto';
+
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { ListUsersInput } from './dtos/list-users.dto';
-import { CollectionInput } from '@/shared/infra/dto/collection.dto';
-import { AllowPublicAccess, Authenticated, Role } from '@/shared/decorators';
 
 import {
   UserCollectionPresenter,

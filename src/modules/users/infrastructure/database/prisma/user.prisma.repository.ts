@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import { UserEntity } from '@/modules/users/domain/user.entity';
-import {
-  UserRepository,
-  UserRepositoryFilter,
-  UserRepositoryFilterByUniqueFields,
-  UserRepositoryFilterMany,
-} from '@/modules/users/domain/user.repository';
+import { PrismaService } from '@/shared/infra/prisma/prisma.service';
 import {
   FindManyResult,
   Paging,
   Sorting,
 } from '@/shared/domain/repositories/repository-contract';
 
-import { PrismaService } from '@/shared/infra/prisma/prisma.service';
+import { UserEntity } from '@/users/domain/user.entity';
+import {
+  UserRepository,
+  UserRepositoryFilter,
+  UserRepositoryFilterByUniqueFields,
+  UserRepositoryFilterMany,
+} from '@/users/domain/user.repository';
 
 @Injectable()
 export class UserPrismaRepository implements UserRepository {
@@ -43,25 +43,29 @@ export class UserPrismaRepository implements UserRepository {
         name: entity.name,
         email: entity.email,
         password: entity.password,
-        createdAt: entity.props.createdAt,
-        updatedAt: entity.props.updatedAt,
-        deletedAt: entity.props.deletedAt,
+        phone: entity.phone,
+        imageUrl: entity.imageUrl,
+        role: entity.role,
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt,
+        deletedAt: entity.deletedAt,
       },
     });
 
     return new UserEntity(user);
   }
 
-  async findById(id: string): Promise<UserEntity | undefined> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
+  async findById(
+    id: string,
+    filter?: UserRepositoryFilter,
+  ): Promise<UserEntity | undefined> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id,
+        deletedAt: filter?.withDeleted ? undefined : null,
+      },
     });
-
-    if (!user) {
-      return undefined;
-    }
-
-    return new UserEntity(user);
+    return user ? new UserEntity(user) : undefined;
   }
 
   async findOne(
@@ -125,16 +129,18 @@ export class UserPrismaRepository implements UserRepository {
 
   async update(entity: UserEntity): Promise<void> {
     await this.prisma.user.update({
+      where: { id: entity.id },
       data: {
+        id: entity.id,
         name: entity.name,
         email: entity.email,
         password: entity.password,
-        role: entity.props.role,
-        updatedAt: entity.props.updatedAt,
-        deletedAt: entity.props.deletedAt,
-      },
-      where: {
-        id: entity.id,
+        phone: entity.phone,
+        imageUrl: entity.imageUrl,
+        role: entity.role,
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt,
+        deletedAt: entity.deletedAt,
       },
     });
   }

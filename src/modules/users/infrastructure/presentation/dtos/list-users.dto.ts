@@ -1,5 +1,5 @@
-import { IsOptional, IsString, IsArray, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString, IsArray, IsBoolean } from 'class-validator';
 
 export class ListUsersInput {
   @ApiProperty({ type: String, required: false })

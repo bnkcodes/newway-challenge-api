@@ -1,13 +1,12 @@
 import { RepositoryInterface } from '@/shared/domain/repositories/repository-contract';
 import { UserEntity } from './user.entity';
 
-export type UserRepositoryFilter = Partial<{
+export type UserRepositoryFilter = {
   id?: string;
-  email?: string;
   name?: string;
-  role?: string;
+  email?: string;
   withDeleted?: boolean;
-}>;
+};
 
 export type UserRepositoryFilterMany = {
   search?: string;
@@ -18,17 +17,14 @@ export type UserRepositoryFilterMany = {
 };
 
 export type UserRepositoryFilterByUniqueFields = {
-  email: string;
+  id?: string;
+  email?: string;
 };
 
 export const UserRepositoryName = 'UserRepository';
 
 export interface UserRepository
-  extends RepositoryInterface<
-    UserEntity,
-    UserRepositoryFilter,
-    UserRepositoryFilterMany
-  > {
+  extends RepositoryInterface<UserEntity, UserRepositoryFilter> {
   findExistingByUniqueFields(
     filter: UserRepositoryFilterByUniqueFields,
   ): Promise<UserEntity | undefined>;

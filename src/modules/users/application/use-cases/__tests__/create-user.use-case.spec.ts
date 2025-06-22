@@ -1,8 +1,9 @@
+import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
+
 import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
+import { CreateUserUseCase } from '@/users/application/use-cases/create-user.use-case';
 import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
 import { UserProps } from '@/users/domain/user.entity';
-import { CreateUserUseCase } from '@/users/application/use-cases/create-user.use-case';
-import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 
 describe('Create user', () => {
   let userInMemoryRepository: InMemoryUserRepository;

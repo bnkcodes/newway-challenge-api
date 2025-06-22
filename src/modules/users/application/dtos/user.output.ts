@@ -5,22 +5,22 @@ export type UserOutput = UserProps & {
 };
 
 export class UserOutputMapper {
-  static fromEntity(user: UserEntity): UserOutput {
+  static fromEntity(user: UserEntity, withPassword = false): UserOutput {
     return {
       id: user.id,
       name: user.name,
       email: user.email,
-      password: user.password,
-      phone: user.props.phone,
+      password: withPassword ? user.password : undefined,
+      phone: user.phone,
       imageUrl: user.imageUrl,
-      role: user.props.role,
-      createdAt: user.props.createdAt,
-      updatedAt: user.props.updatedAt,
-      deletedAt: user.props.deletedAt,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      deletedAt: user.deletedAt,
     };
   }
 
-  static fromMany(users: UserEntity[]): UserOutput[] {
-    return users.map((user) => this.fromEntity(user));
+  static fromMany(users: UserEntity[], withPassword = false): UserOutput[] {
+    return users.map((user) => this.fromEntity(user, withPassword));
   }
 }

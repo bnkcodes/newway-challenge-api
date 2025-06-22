@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
@@ -8,9 +9,8 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { ApiProperty } from '@nestjs/swagger';
-import { Match } from '@/shared/decorators/custom-validator.decorator';
 import { passwordRequirements } from '@/shared/utils/password-requirements';
+import { Match } from '@/shared/decorators/custom-validator.decorator';
 
 export class CreateUserDto {
   @ApiProperty({ type: String, required: true })

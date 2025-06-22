@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 
 import { InMemoryRepository } from '@/shared/domain/repositories/in-memory-repository';
-import { UserEntity } from '@/modules/users/domain/user.entity';
+
+import { UserEntity } from '@/users/domain/user.entity';
 import {
   UserRepository,
   UserRepositoryFilter,
   UserRepositoryFilterMany,
   UserRepositoryFilterByUniqueFields,
-} from '@/modules/users/domain/user.repository';
-
+} from '@/users/domain/user.repository';
 @Injectable()
 export class InMemoryUserRepository implements UserRepository {
   memoRepo = new InMemoryRepository<
@@ -57,7 +57,7 @@ export class InMemoryUserRepository implements UserRepository {
         }
       }
 
-      if (filter?.role && item.props.role !== filter.role) {
+      if (filter?.role && item.role !== filter.role) {
         return false;
       }
 
@@ -135,12 +135,12 @@ export class InMemoryUserRepository implements UserRepository {
       name: item.name,
       email: item.email,
       password: item.password,
-      phone: item.props.phone,
-      imageUrl: item.props.imageUrl,
-      role: item.props.role,
-      createdAt: item.props.createdAt,
-      updatedAt: item.props.updatedAt,
-      deletedAt: item.props.deletedAt,
+      phone: item.phone,
+      imageUrl: item.imageUrl,
+      role: item.role,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      deletedAt: item.deletedAt,
     }));
   }
 

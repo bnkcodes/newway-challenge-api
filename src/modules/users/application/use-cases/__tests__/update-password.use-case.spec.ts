@@ -1,10 +1,11 @@
-import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
-import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
-import { UserEntity } from '@/users/domain/user.entity';
-import { UpdatePasswordUseCase } from '@/users/application/use-cases/update-password.use-case';
+import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 import { ErrorException } from '@/shared/infra/error/error-exception';
 import { ErrorCode } from '@/shared/infra/error/error-code';
-import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
+
+import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
+import { UpdatePasswordUseCase } from '@/users/application/use-cases/update-password.use-case';
+import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
+import { UserEntity } from '@/users/domain/user.entity';
 
 describe('Update password', () => {
   let userInMemoryRepository: InMemoryUserRepository;

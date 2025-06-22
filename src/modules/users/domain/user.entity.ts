@@ -28,12 +28,32 @@ export class UserEntity extends Entity<UserProps> {
     return this.props.password;
   }
 
+  get phone(): string | null {
+    return this.props.phone;
+  }
+
   get imageUrl(): string | null {
     return this.props.imageUrl;
   }
 
   get isDeleted(): boolean {
     return this.props.deletedAt !== null;
+  }
+
+  get role(): UserRole {
+    return this.props.role;
+  }
+
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this.props.updatedAt;
+  }
+
+  get deletedAt(): Date | null {
+    return this.props.deletedAt;
   }
 
   get isAdmin(): boolean {
@@ -45,7 +65,6 @@ export class UserEntity extends Entity<UserProps> {
   }
 
   update(updates: Partial<UserProps>): void {
-    // Garantir que o email seja sempre lowercase
     if (updates.email) {
       updates.email = updates.email.toLowerCase();
     }

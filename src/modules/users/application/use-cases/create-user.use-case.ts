@@ -1,7 +1,7 @@
 import { UseCase } from '@/shared/application/use-cases/use-case';
+import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 import { ErrorException } from '@/shared/infra/error/error-exception';
 import { ErrorCode } from '@/shared/infra/error/error-code';
-import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 
 import { UserEntity } from '@/users/domain/user.entity';
 import { UserRepository } from '@/users/domain/user.repository';

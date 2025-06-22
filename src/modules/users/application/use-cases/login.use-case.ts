@@ -62,18 +62,18 @@ export class LoginUseCase
       );
     }
 
-    const accessToken = await this.tokenProvider.sign({
+    const token = await this.tokenProvider.sign({
+      jwtSecret: this.jwtSecret,
+      jwtExpiresIn: this.jwtExpiresIn,
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.props.role,
-      jwtSecret: this.jwtSecret,
-      jwtExpiresIn: this.jwtExpiresIn,
+      role: user.role,
     });
 
     return {
       user: UserOutputMapper.fromEntity(user),
-      accessToken,
+      accessToken: token,
     };
   }
 }

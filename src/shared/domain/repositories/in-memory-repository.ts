@@ -19,13 +19,8 @@ export class InMemoryRepository<
     return Promise.resolve(entity);
   }
 
-  async findById(id: string, companyId?: string) {
-    return Promise.resolve(
-      this.items.find((item) => {
-        if (companyId && (item as any).companyId !== companyId) return false;
-        return item.id === id;
-      }),
-    );
+  async findById(id: string) {
+    return Promise.resolve(this.items.find((item) => item.id === id));
   }
 
   async findOne(filter: FilterOneType) {

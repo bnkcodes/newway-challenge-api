@@ -1,9 +1,10 @@
+import { ErrorCode } from '@/shared/infra/error/error-code';
+import { ErrorException } from '@/shared/infra/error/error-exception';
+
 import { InMemoryUserRepository } from '@/users/infrastructure/database/in-memory/repositories/user.repository';
+import { UpdateUserUseCase } from '@/users/application/use-cases/update-user.use-case';
 import { UserDataBuilder } from '@/users/domain/testing/user-data-builder';
 import { UserEntity } from '@/users/domain/user.entity';
-import { UpdateUserUseCase } from '@/users/application/use-cases/update-user.use-case';
-import { ErrorException } from '@/shared/infra/error/error-exception';
-import { ErrorCode } from '@/shared/infra/error/error-code';
 
 describe('Update user', () => {
   let userInMemoryRepository: InMemoryUserRepository;
@@ -32,16 +33,16 @@ describe('Update user', () => {
 
     expect(result).toEqual({
       user: {
-      id: user.id,
+        id: user.id,
         name: updateData.name,
         email: updateData.email,
-        password: user.password,
-        createdAt: user.props.createdAt,
-        updatedAt: expect.any(Date) as Date,
-        deletedAt: user.props.deletedAt,
-        imageUrl: user.props.imageUrl,
-        phone: user.props.phone,
-        role: user.props.role,
+        password: undefined,
+        createdAt: user.createdAt,
+        updatedAt: expect.any(Date),
+        deletedAt: user.deletedAt,
+        imageUrl: user.imageUrl,
+        phone: user.phone,
+        role: user.role,
       },
     });
   });

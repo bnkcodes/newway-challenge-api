@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 
-import { UserOutput } from '../../application/dtos/user.output';
+import { UserOutput } from '@/users/application/dtos/user.output';
 
 export class UserPresenter {
   @ApiProperty({ type: String, required: true })

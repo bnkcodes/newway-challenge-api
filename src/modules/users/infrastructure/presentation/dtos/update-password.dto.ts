@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
@@ -6,10 +7,9 @@ import {
   IsOptional,
   IsStrongPassword,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
-import { Match } from '@/shared/decorators/custom-validator.decorator';
 import { passwordRequirements } from '@/shared/utils/password-requirements';
+import { Match } from '@/shared/decorators/custom-validator.decorator';
 
 export class UpdatePasswordDto {
   @ApiProperty({ type: String, required: false })
