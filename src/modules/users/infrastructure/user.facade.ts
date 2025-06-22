@@ -1,8 +1,10 @@
-import { UserRepository } from '@/users/domain/user.repository';
+import { EnvironmentVariablesType } from '@/config/env';
+
 import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 import { IStorageProvider } from '@/shared/providers/storage';
 import { ITokenProvider } from '@/shared/providers/token/interface/ITokenProvider';
 
+import { UserRepository } from '@/users/domain/user.repository';
 import { CreateUserUseCase } from '@/users/application/use-cases/create-user.use-case';
 import { DeleteUserUseCase } from '@/users/application/use-cases/delete-user.use-case';
 import { GetUserUseCase } from '@/users/application/use-cases/get-user.use-case';
@@ -29,8 +31,7 @@ export class UserFacade {
     private readonly cryptographyProvider: ICryptographyProvider,
     private readonly storageProvider: IStorageProvider,
     private readonly tokenProvider: ITokenProvider,
-    private readonly jwtSecret: string,
-    private readonly jwtExpiresIn: string,
+    private readonly config: EnvironmentVariablesType,
   ) {
     if (!userRepository) {
       throw new Error('Error instantiating UserFacade: no userRepository');
@@ -68,11 +69,10 @@ export class UserFacade {
       storageProvider,
     );
     this.loginUseCase = new LoginUseCase(
+      config,
       userRepository,
       cryptographyProvider,
       tokenProvider,
-      jwtSecret,
-      jwtExpiresIn,
     );
   }
 }

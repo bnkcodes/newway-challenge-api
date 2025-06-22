@@ -36,8 +36,7 @@ import { UserFacade } from './infrastructure/user.facade';
           cryptographyProvider,
           storageProvider,
           tokenProvider,
-          config.jwt.secret,
-          config.jwt.expiresIn,
+          config,
         ),
       inject: [
         UserRepositoryName,

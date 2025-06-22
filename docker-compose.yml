@@ -27,9 +27,14 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=newway_challenge
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - newway-network
 
 networks:
   newway-network:
     driver: bridge
+
+volumes:
+  postgres_data:

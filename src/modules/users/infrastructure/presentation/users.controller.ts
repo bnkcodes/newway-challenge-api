@@ -59,7 +59,6 @@ export class UsersController {
   }
 
   @Get('/me')
-  @Role(UserRole.USER)
   @ApiOperation({ summary: 'Get authenticated user data' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async getMe(@Authenticated() user: any): Promise<UserPresenterWrapper> {
@@ -73,7 +72,7 @@ export class UsersController {
   }
 
   @Get('/:id')
-  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async getUser(@Param('id') id: string): Promise<UserPresenterWrapper> {
@@ -116,7 +115,6 @@ export class UsersController {
   }
 
   @Put('/me')
-  @Role(UserRole.USER)
   @ApiOperation({ summary: 'Update authenticated user' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async updateMe(
@@ -152,7 +150,6 @@ export class UsersController {
   }
 
   @Delete('/me')
-  @Role(UserRole.USER)
   @ApiOperation({ summary: 'Delete authenticated user account' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   async deleteMe(@Authenticated() user: any): Promise<{ success: boolean }> {
@@ -172,7 +169,6 @@ export class UsersController {
   }
 
   @Patch('/me/upload-image')
-  @Role(UserRole.USER)
   @ApiOperation({ summary: 'Upload authenticated user image' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   @UseInterceptors(FileInterceptor('file'))
@@ -226,7 +222,6 @@ export class UsersController {
   }
 
   @Patch('/me/delete-image')
-  @Role(UserRole.USER)
   @ApiOperation({ summary: 'Delete authenticated user image' })
   @ApiResponse({ status: 200, type: UserPresenterWrapper })
   async deleteMyImage(

@@ -10,13 +10,13 @@ export class UserOutputMapper {
       id: user.id,
       name: user.name,
       email: user.email,
-      password: withPassword ? user.password : undefined,
       phone: user.phone,
       imageUrl: user.imageUrl,
       role: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       deletedAt: user.deletedAt,
+      ...(withPassword && { password: user.password }),
     };
   }
 

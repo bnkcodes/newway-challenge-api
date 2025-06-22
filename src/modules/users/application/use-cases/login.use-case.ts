@@ -1,3 +1,7 @@
+import { Inject } from '@nestjs/common';
+
+import { EnvironmentVariables, EnvironmentVariablesType } from '@/config/env';
+
 import { UseCase } from '@/shared/application/use-cases/use-case';
 import { ErrorException } from '@/shared/infra/error/error-exception';
 import { ErrorCode } from '@/shared/infra/error/error-code';
@@ -24,11 +28,11 @@ export class LoginUseCase
   implements UseCase<LoginUseCaseInput, LoginUseCaseOutput>
 {
   constructor(
+    @Inject(EnvironmentVariables.KEY)
+    private readonly config: EnvironmentVariablesType,
     private readonly userRepository: UserRepository,
     private readonly cryptographyProvider: ICryptographyProvider,
-    private readonly tokenProvider: ITokenProvider,
-    private readonly jwtSecret: string,
-    private readonly jwtExpiresIn: string,
+    private readonly jwtProvider: ITokenProvider,
   ) {}
 
   async execute(input: LoginUseCaseInput): Promise<LoginUseCaseOutput> {
@@ -62,18 +66,17 @@ export class LoginUseCase
       );
     }
 
-    const token = await this.tokenProvider.sign({
-      jwtSecret: this.jwtSecret,
-      jwtExpiresIn: this.jwtExpiresIn,
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+    const userOutput = UserOutputMapper.fromEntity(user);
+
+    const accessToken = await this.jwtProvider.sign({
+      ...userOutput,
+      jwtExpiresIn: this.config.jwt.expiresIn,
+      jwtSecret: this.config.jwt.secret,
     });
 
     return {
-      user: UserOutputMapper.fromEntity(user),
-      accessToken: token,
+      user: userOutput,
+      accessToken,
     };
   }
 }

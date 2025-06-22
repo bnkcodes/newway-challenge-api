@@ -20,20 +20,40 @@ export class UserEntity extends Entity<UserProps> {
     return this.props.name;
   }
 
+  set name(value: string) {
+    this.props.name = value;
+  }
+
   get email(): string {
     return this.props.email;
+  }
+
+  set email(value: string) {
+    this.props.email = value.toLowerCase();
   }
 
   get password(): string {
     return this.props.password;
   }
 
+  set password(value: string) {
+    this.props.password = value;
+  }
+
   get phone(): string | null {
     return this.props.phone;
   }
 
+  set phone(value: string | null) {
+    this.props.phone = value;
+  }
+
   get imageUrl(): string | null {
     return this.props.imageUrl;
+  }
+
+  set imageUrl(value: string | null) {
+    this.props.imageUrl = value;
   }
 
   get isDeleted(): boolean {
@@ -42,6 +62,10 @@ export class UserEntity extends Entity<UserProps> {
 
   get role(): UserRole {
     return this.props.role;
+  }
+
+  set role(value: UserRole) {
+    this.props.role = value;
   }
 
   get createdAt(): Date {

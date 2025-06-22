@@ -1,6 +1,5 @@
 import { UserRole } from '@prisma/client';
 import {
-  IsDate,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -43,15 +42,12 @@ export class UserRules implements UserRulerProps {
   @IsOptional()
   role?: UserRole;
 
-  @IsDate()
   @IsOptional()
   createdAt?: Date;
 
-  @IsDate()
   @IsOptional()
   updatedAt?: Date;
 
-  @IsDate()
   @IsOptional()
   deletedAt?: Date | null;
 

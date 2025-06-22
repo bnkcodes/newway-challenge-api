@@ -1,7 +1,12 @@
-import { PrismaClient, UserRole } from '@prisma/client';
+import 'tsconfig-paths/register';
+
+import { UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
-const prisma = new PrismaClient();
+import { UserEntity } from '@/users/domain/user.entity';
+import { PrismaService } from '@/shared/infra/prisma/prisma.service';
+
+const prisma = new PrismaService();
 
 async function createAdminUser() {
   try {
@@ -14,18 +19,21 @@ async function createAdminUser() {
     });
 
     if (existingUser) {
+      console.log('Admin user already exists');
       return;
     }
 
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
+    const adminUser = new UserEntity({
+      name: adminName,
+      email: adminEmail,
+      password: hashedPassword,
+      role: UserRole.ADMIN,
+    });
+
     await prisma.user.create({
-      data: {
-        name: adminName,
-        email: adminEmail,
-        password: hashedPassword,
-        role: UserRole.ADMIN,
-      },
+      data: adminUser.toJSON(),
     });
   } catch (error) {
     console.error('Error creating admin user:', error);

@@ -79,6 +79,8 @@ yarn docker:seed
 
 Todos os comandos abaixo devem ser executados com os contêineres já iniciados (`docker-compose up -d`).
 
+### Desenvolvimento
+
 - **Abrir o Prisma Studio (Interface visual do banco de dados):**
   ```bash
   yarn docker:studio
@@ -90,9 +92,27 @@ Todos os comandos abaixo devem ser executados com os contêineres já iniciados 
   yarn docker:test
   ```
 
-- **Ver Logs da Aplicação em Tempo Real:**
+
+### Gerenciamento de Containers
+
+- **Ver logs da aplicação em tempo real:**
   ```bash
   docker-compose logs -f app
+  ```
+
+- **Ver logs do banco de dados:**
+  ```bash
+  docker-compose logs -f postgresql
+  ```
+
+- **Reiniciar apenas a aplicação:**
+  ```bash
+  docker-compose restart app
+  ```
+
+- **Reiniciar todos os serviços:**
+  ```bash
+  docker-compose restart
   ```
 
 - **Parar todos os contêineres:**
@@ -103,4 +123,31 @@ Todos os comandos abaixo devem ser executados com os contêineres já iniciados 
 - **Parar contêineres e remover volumes (para limpar o banco de dados):**
   ```bash
   docker-compose down -v
+  ```
+
+- **Reconstruir a aplicação (após mudanças no Dockerfile):**
+  ```bash
+  docker-compose down
+  docker-compose build --no-cache
+  docker-compose up -d
+  ```
+
+### Banco de Dados
+
+- **Aplicar migrações:**
+  ```bash
+  yarn docker:migrate
+  ```
+
+- **Criar usuário administrador:**
+  ```bash
+  yarn docker:seed
+  ```
+
+- **Resetar banco de dados (apaga todos os dados):**
+  ```bash
+  docker-compose down -v
+  docker-compose up -d
+  yarn docker:migrate
+  yarn docker:seed
   ```

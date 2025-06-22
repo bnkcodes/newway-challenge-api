@@ -33,7 +33,7 @@ export class UserPrismaRepository implements UserRepository {
       return undefined;
     }
 
-    return new UserEntity(user);
+    return new UserEntity(user, user.id);
   }
 
   async create(entity: UserEntity): Promise<UserEntity> {
@@ -52,20 +52,17 @@ export class UserPrismaRepository implements UserRepository {
       },
     });
 
-    return new UserEntity(user);
+    return new UserEntity(user, user.id);
   }
 
-  async findById(
-    id: string,
-    filter?: UserRepositoryFilter,
-  ): Promise<UserEntity | undefined> {
-    const user = await this.prisma.user.findFirst({
+  async findById(id: string): Promise<UserEntity | undefined> {
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
-        deletedAt: filter?.withDeleted ? undefined : null,
       },
     });
-    return user ? new UserEntity(user) : undefined;
+
+    return user ? new UserEntity(user, user.id) : undefined;
   }
 
   async findOne(
@@ -84,7 +81,7 @@ export class UserPrismaRepository implements UserRepository {
       return undefined;
     }
 
-    return new UserEntity(user);
+    return new UserEntity(user, user.id);
   }
 
   async findMany(
@@ -122,7 +119,7 @@ export class UserPrismaRepository implements UserRepository {
     ]);
 
     return {
-      items: users.map((user) => new UserEntity(user)),
+      items: users.map((user) => new UserEntity(user, user.id)),
       totalCount,
     };
   }
