@@ -54,6 +54,13 @@ export class LoginUseCase
       );
     }
 
+    if (user.deletedAt) {
+      throw new ErrorException(
+        ErrorCode.Unauthorized,
+        'Esta conta foi desativada. Entre em contato com o administrador.',
+      );
+    }
+
     const isPasswordValid = await this.cryptographyProvider.compare({
       password: input.password,
       hash: user.password,

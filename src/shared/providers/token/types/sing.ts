@@ -8,6 +8,7 @@ export type SingInput = {
   name: string;
   role?: UserRole;
   isAdmin?: boolean;
+  deletedAt?: Date | null;
 };
 
 export type SingOutput = string;

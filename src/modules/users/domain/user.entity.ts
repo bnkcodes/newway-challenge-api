@@ -89,11 +89,16 @@ export class UserEntity extends Entity<UserProps> {
   }
 
   update(updates: Partial<UserProps>): void {
+    const validUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([, value]) => value !== undefined),
+    );
+
+    Object.assign(this.props, validUpdates);
+
     if (updates.email) {
-      updates.email = updates.email.toLowerCase();
+      this.props.email = updates.email.toLowerCase();
     }
 
-    Object.assign(this.props, updates);
     this._updateTimestamp();
   }
 

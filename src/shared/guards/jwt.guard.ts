@@ -31,10 +31,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements IAuthGuard {
     _: Error,
     user: Account,
   ): Account {
-    if (user) return user;
-    else
+    if (!user) {
       throw new UnauthorizedException(
         'Você precisa estar logado para realizar esta ação.',
       );
+    }
+
+    return user;
   }
 }

@@ -16,6 +16,7 @@ export class JWTGateway implements ITokenProvider {
           email: data.email,
           role: data.role,
           isAdmin: data.isAdmin,
+          deletedAt: data.deletedAt,
         },
         data.jwtSecret,
         {
