@@ -14,7 +14,7 @@ export const EnvironmentVariables = registerAs('config', () => {
       port: process.env.PORT,
     },
     database: {
-      uri: process.env.MONGODB_CONNECTION,
+      uri: process.env.DATABASE_URL,
     },
     jwt: {
       secret: process.env.JWT_SECRET,

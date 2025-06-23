@@ -22,7 +22,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     } else if (exception instanceof HttpException) {
       httpException = exception;
     } else {
-      // Fallback para erros não tratados
       httpException = new HttpException(
         {
           statusCode: 500,

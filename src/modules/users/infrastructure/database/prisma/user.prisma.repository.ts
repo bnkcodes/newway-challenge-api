@@ -125,4 +125,12 @@ export class UserPrismaRepository implements UserRepository {
       where: { id: filter.id },
     });
   }
+
+  async count(): Promise<number> {
+    return this.prisma.user.count({
+      where: {
+        deletedAt: null,
+      },
+    });
+  }
 }

@@ -1,153 +1,188 @@
 # New Way Challenge - API de Gerenciamento de Tarefas
 
-Esta é a API para o desafio da New Way, desenvolvida em Nest.js para gerenciar usuários e suas respectivas tarefas.
-
-## Tecnologias Utilizadas
-
-- **Backend:** [Nest.js](https://nestjs.com/)
-- **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
-- **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/)
-- **ORM:** [Prisma](https://www.prisma.io/)
-- **Containerização:** [Docker](https://www.docker.com/)
+API desenvolvida em Nest.js para o desafio da New Way, com gerenciamento de usuários e tarefas.
 
 ---
 
-## Pré-requisitos
+## Visão Geral
 
-Antes de começar, garanta que você tenha o [Docker](https://www.docker.com/products/docker-desktop/) e o Docker Compose instalados em sua máquina.
-
----
-
-## Como Executar o Projeto
-
-Siga os passos abaixo para configurar e rodar o ambiente de desenvolvimento.
-
-### 1. Clone o Repositório
-
-```bash
-git clone https://github.com/bnkcodes/newway-challenge-api.git
-cd newway-challenge-api
-```
-
-### 2. Configure as Variáveis de Ambiente
-
-Este projeto usa o arquivo `.env.example` como um template para as variáveis de ambiente.
-
-Primeiro, copie o arquivo de exemplo para criar seu próprio arquivo `.env`:
-
-```bash
-cp .env.example .env
-```
-
-Agora, abra o arquivo `.env` recém-criado e preencha as variáveis necessárias, como `JWT_SECRET` e as credenciais para o serviço de armazenamento de sua escolha (S3 ou Bunny). A `DATABASE_URL` já vem configurada corretamente para o ambiente Docker.
-
-### 3. Inicie os Contêineres
-
-Use o Docker Compose para construir as imagens e iniciar a aplicação e o banco de dados em segundo plano.
-
-```bash
-docker-compose up -d --build
-```
-
-### 4. Aplique as Migrações do Banco de Dados
-
-Com os contêineres em execução, execute o script para criar as tabelas no banco de dados.
-
-```bash
-yarn docker:migrate
-```
-*O Prisma pode pedir para você dar um nome para a migração inicial (ex: `init`).*
-
-### 5. Crie um Usuário Administrador
-
-Para popular o banco com um usuário administrador, execute o seguinte script:
-
-```bash
-yarn docker:seed
-```
+API RESTful para cadastro/login de usuários, autenticação JWT, permissões (admin/usuário) e gerenciamento de tarefas (CRUD). Permite que cada usuário gerencie suas próprias tarefas e admin visualize todas.
 
 ---
 
-## Acesso à Aplicação
-
-- **URL Base da API:** `http://localhost:3000`
-- **Documentação (Swagger):** `http://localhost:3000/doc/api`
+## Tecnologias
+- Nest.js (TypeScript)
+- PostgreSQL + Prisma ORM
+- Docker
+- AWS ECS, RDS, Secrets Manager, Terraform
 
 ---
 
-## Comandos Úteis para o Dia a Dia
-
-Todos os comandos abaixo devem ser executados com os contêineres já iniciados (`docker-compose up -d`).
-
-### Desenvolvimento
-
-- **Abrir o Prisma Studio (Interface visual do banco de dados):**
-  ```bash
-  yarn docker:studio
+## Autenticação
+- Autenticação via JWT.
+- Após login, use o token JWT no header:
   ```
-  Depois de executar, acesse `http://localhost:5555` no seu navegador.
+  Authorization: Bearer <token>
+  ```
+- O token é necessário para acessar rotas protegidas (tarefas, perfil, etc).
 
-- **Executar todos os testes:**
+---
+
+## Perfis e Permissões
+- **Admin:** pode ver todas as tarefas e gerenciar usuários.
+- **Usuário comum:** só pode ver e gerenciar suas próprias tarefas.
+
+---
+
+## Exemplos de Uso
+
+### Criar usuário
+```json
+POST /users
+{
+  "name": "João",
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
+
+### Login
+```json
+POST /auth/login
+{
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
+
+### Criar tarefa (autenticado)
+```json
+POST /tasks
+{
+  "title": "Minha tarefa",
+  "description": "Detalhes da tarefa"
+}
+```
+
+### Exemplo de resposta de erro
+```json
+{
+  "statusCode": 400,
+  "message": "Email ou senha estão incorretos."
+}
+```
+
+---
+
+## Estrutura do Projeto e Patterns
+
+O projeto segue princípios de **Domain-Driven Design (DDD)** e **Clean Architecture** para garantir separação de responsabilidades, testabilidade e escalabilidade.
+
+- **src/**: Código principal da aplicação
+  - **modules/**: Cada domínio (users, tasks) é um módulo independente, seguindo o padrão modular do Nest.js
+    - **application/**: Casos de uso (use-cases), DTOs e lógica de aplicação
+    - **domain/**: Entidades, repositórios e regras de negócio
+    - **infrastructure/**: Implementações concretas (banco, controllers, presenters)
+  - **shared/**: Código utilitário, providers, estratégias, decorators e infraestrutura comum
+- **prisma/**: Schema do banco de dados e seed (população inicial/admin)
+- **test/**: Testes automatizados (unitários e e2e)
+
+**Principais patterns utilizados:**
+- DDD (Domain-Driven Design)
+- Clean Architecture
+- Repository Pattern
+- DTOs para entrada/saída
+- Use Cases isolando regras de negócio
+- Injeção de dependências (Nest.js DI)
+
+---
+
+## Documentação da API
+- **Swagger (dev):** `http://localhost:3000/doc/api`
+- **Produção:** `http://newway-challenge-alb-499076483.sa-east-1.elb.amazonaws.com/doc/api`
+- A documentação Swagger permite visualizar todos os endpoints e ver exemplos de payloads e respostas.
+
+---
+
+## Testes
+- Para rodar os testes automatizados:
   ```bash
   yarn docker:test
   ```
 
+---
 
-### Gerenciamento de Containers
+## Produção (AWS)
+- O seed roda automaticamente ao subir o container e garante que o usuário admin existe/atualizado.
+- O login de admin padrão é:
+  - **E-mail:** `admin@example.com`
+  - **Senha:** `admin123`
+- Para mudar o admin, defina as variáveis de ambiente na Task Definition do ECS (ou via Terraform):
+  - `ADMIN_EMAIL` (ex: `admin@newway.com`)
+  - `ADMIN_PASSWORD` (ex: `suaSenhaForte`)
+  - `ADMIN_NAME` (opcional)
+- Após alterar as variáveis, faça um novo deploy para atualizar o admin.
+- O seed é idempotente: sempre que o container sobe, garante o admin correto.
 
-- **Ver logs da aplicação em tempo real:**
+---
+
+## Desenvolvimento Local
+
+### Pré-requisitos
+- Docker e Docker Compose instalados
+
+### Passos principais
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/bnkcodes/newway-challenge-api.git
+   cd newway-challenge-api
+   ```
+2. **Configure o .env:**
+   ```bash
+   cp .env.example .env
+   # Edite o .env conforme necessário
+   ```
+3. **Suba os containers:**
+   ```bash
+   docker-compose up --build
+   # (sem -d, para ver os logs no terminal)
+   ```
+4. **Aplique as migrações e rode o seed (admin):**
+   Em outro terminal, rode:
+   ```bash
+   yarn migrate:seed
+   # Isso aplica as migrações e garante o admin no banco
+   ```
+
+### Comandos essenciais
+- **Aplique migrações e seed juntos:**
+  ```bash
+  yarn migrate:seed
+  ```
+- **Parar todos os containers:**
+  ```bash
+  docker-compose down
+  ```
+- **Iniciar novamente:**
+  ```bash
+  docker-compose up
+  ```
+- **Ver logs da aplicação:**
   ```bash
   docker-compose logs -f app
   ```
-
-- **Ver logs do banco de dados:**
+- **Abrir Prisma Studio:**
   ```bash
-  docker-compose logs -f postgresql
+  yarn docker:studio
+  # Acesse http://localhost:5555
   ```
-
-- **Reiniciar apenas a aplicação:**
+- **Executar testes:**
   ```bash
-  docker-compose restart app
+  yarn docker:test
   ```
-
-- **Reiniciar todos os serviços:**
-  ```bash
-  docker-compose restart
-  ```
-
-- **Parar todos os contêineres:**
-  ```bash
-  docker-compose down
-  ```
-
-- **Parar contêineres e remover volumes (para limpar o banco de dados):**
+- **Resetar banco:**
   ```bash
   docker-compose down -v
-  ```
-
-- **Reconstruir a aplicação (após mudanças no Dockerfile):**
-  ```bash
-  docker-compose down
-  docker-compose build --no-cache
-  docker-compose up -d
-  ```
-
-### Banco de Dados
-
-- **Aplicar migrações:**
-  ```bash
-  yarn docker:migrate
-  ```
-
-- **Criar usuário administrador:**
-  ```bash
-  yarn docker:seed
-  ```
-
-- **Resetar banco de dados (apaga todos os dados):**
-  ```bash
-  docker-compose down -v
-  docker-compose up -d
-  yarn docker:migrate
-  yarn docker:seed
+  docker-compose up
+  yarn migrate:seed
   ```

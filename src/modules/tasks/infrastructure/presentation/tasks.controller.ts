@@ -41,7 +41,11 @@ export class TasksController {
   @Post()
   @Role(UserRole.USER)
   @ApiOperation({ summary: 'Criar tarefa' })
-  @ApiResponse({ status: 201, type: TaskPresenterWrapper })
+  @ApiResponse({
+    status: 201,
+    description: 'Tarefa criada com sucesso',
+    type: TaskPresenterWrapper,
+  })
   async create(
     @Authenticated() user: AuthenticatedPayload,
     @Body() input: CreateTaskDto,
@@ -57,8 +61,12 @@ export class TasksController {
 
   @Get()
   @Role(UserRole.USER)
-  @ApiOperation({ summary: 'Listar tarefas do usuário logado' })
-  @ApiResponse({ status: 200, type: TaskCollectionPresenter })
+  @ApiOperation({ summary: 'Listar tarefas do usuário autenticado' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de tarefas do usuário autenticado',
+    type: TaskCollectionPresenter,
+  })
   async list(
     @Authenticated() user: AuthenticatedPayload,
     @Query() queryParams?: CollectionInput,
@@ -85,9 +93,13 @@ export class TasksController {
   @Get('user/:userId')
   @Role(UserRole.ADMIN)
   @ApiOperation({
-    summary: 'Listar todas as tarefas de um usuário específico (Apenas Admin)',
+    summary: 'Listar todas as tarefas de um usuário específico (apenas admin)',
   })
-  @ApiResponse({ status: 200, type: TaskCollectionPresenter })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de tarefas do usuário informado',
+    type: TaskCollectionPresenter,
+  })
   async listByUser(
     @Param('userId') userId: string,
     @Query() queryParams?: CollectionInput,
@@ -113,7 +125,11 @@ export class TasksController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Atualizar tarefa' })
-  @ApiResponse({ status: 200, type: TaskPresenterWrapper })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefa atualizada com sucesso',
+    type: TaskPresenterWrapper,
+  })
   async update(
     @Authenticated() user: AuthenticatedPayload,
     @Param('id') id: string,
@@ -132,7 +148,10 @@ export class TasksController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Deletar tarefa' })
-  @ApiResponse({ status: 204 })
+  @ApiResponse({
+    status: 204,
+    description: 'Tarefa deletada com sucesso',
+  })
   async delete(
     @Authenticated() user: AuthenticatedPayload,
     @Param('id') id: string,

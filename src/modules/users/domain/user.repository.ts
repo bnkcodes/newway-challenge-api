@@ -28,4 +28,5 @@ export interface UserRepository
   findExistingByUniqueFields(
     filter: UserRepositoryFilterByUniqueFields,
   ): Promise<UserEntity | undefined>;
+  count(): Promise<number>;
 }

@@ -79,13 +79,4 @@ export class CreateUserDto {
   @IsOptional()
   @IsString({ message: 'O campo telefone é inválido.' })
   phone?: string;
-
-  @ApiProperty({
-    description: 'User role',
-    enum: ['USER', 'ADMIN'],
-    required: false,
-  })
-  @IsOptional()
-  @IsString({ message: 'O campo role é inválido.' })
-  role?: string;
 }

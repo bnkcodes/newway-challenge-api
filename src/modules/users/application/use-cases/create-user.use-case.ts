@@ -1,3 +1,5 @@
+import { UserRole } from '@prisma/client';
+
 import { UseCase } from '@/shared/application/use-cases/use-case';
 import { ICryptographyProvider } from '@/shared/providers/cryptography/interface/ICryptographyProvider';
 import { ErrorException } from '@/shared/infra/error/error-exception';
@@ -50,12 +52,17 @@ export class CreateUserUseCase
       );
     }
 
+    const totalUsers = await this.userRepository.count();
+    const isFirstUser = totalUsers === 0;
+
     const hashedPassword = await this.cryptographyProvider.encrypt({
       password: input.password,
     });
+
     const user = new UserEntity({
       ...input,
       password: hashedPassword,
+      role: isFirstUser ? UserRole.ADMIN : UserRole.USER, // First user becomes admin
     });
 
     const createdUser = await this.userRepository

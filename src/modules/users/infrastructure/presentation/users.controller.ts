@@ -41,8 +41,12 @@ export class UsersController {
 
   @Post('/')
   @AllowPublicAccess()
-  @ApiOperation({ summary: 'Create user' })
-  @ApiResponse({ status: 201, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Criar usuário' })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuário criado com sucesso',
+    type: UserPresenterWrapper,
+  })
   async createUser(
     @Body() input: CreateUserDto,
   ): Promise<UserPresenterWrapper> {
@@ -50,6 +54,7 @@ export class UsersController {
       name: input.name,
       email: input.email,
       password: input.password,
+      phone: input.phone,
     });
 
     return {
@@ -58,8 +63,12 @@ export class UsersController {
   }
 
   @Get('/me')
-  @ApiOperation({ summary: 'Get authenticated user data' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Obter dados do usuário autenticado' })
+  @ApiResponse({
+    status: 200,
+    description: 'Dados do usuário autenticado',
+    type: UserPresenterWrapper,
+  })
   async getMe(@Authenticated() user: any): Promise<UserPresenterWrapper> {
     const data = await this.userFacade.getUserUseCase.execute({
       id: user.id,
@@ -72,8 +81,12 @@ export class UsersController {
 
   @Get('/:id')
   @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Get user by ID' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Obter usuário por ID (apenas admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário encontrado',
+    type: UserPresenterWrapper,
+  })
   async getUser(@Param('id') id: string): Promise<UserPresenterWrapper> {
     const data = await this.userFacade.getUserUseCase.execute({ id });
 
@@ -84,8 +97,12 @@ export class UsersController {
 
   @Get('/')
   @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'List users' })
-  @ApiResponse({ status: 200, type: UserCollectionPresenter })
+  @ApiOperation({ summary: 'Listar usuários (apenas admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuários',
+    type: UserCollectionPresenter,
+  })
   async listUsers(
     @Query() filter?: ListUsersInput,
     @Query() queryParams?: CollectionInput,
@@ -114,8 +131,12 @@ export class UsersController {
   }
 
   @Put('/me')
-  @ApiOperation({ summary: 'Update authenticated user' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Atualizar usuário autenticado' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário atualizado',
+    type: UserPresenterWrapper,
+  })
   async updateMe(
     @Authenticated() user: any,
     @Body() input: UpdateUserDto,
@@ -132,8 +153,12 @@ export class UsersController {
 
   @Put('/:id')
   @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Update user by ID' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Atualizar usuário por ID (apenas admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário atualizado',
+    type: UserPresenterWrapper,
+  })
   async updateUser(
     @Param('id') id: string,
     @Body() input: UpdateUserDto,
@@ -149,8 +174,12 @@ export class UsersController {
   }
 
   @Patch('/me/deactivate')
-  @ApiOperation({ summary: 'Deactivate authenticated user account' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Desativar conta do usuário autenticado' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário desativado',
+    type: UserPresenterWrapper,
+  })
   async deactivateMe(
     @Authenticated() user: any,
   ): Promise<UserPresenterWrapper> {
@@ -165,8 +194,12 @@ export class UsersController {
   }
 
   @Patch('/me/upload-image')
-  @ApiOperation({ summary: 'Upload authenticated user image' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Fazer upload de imagem do usuário autenticado' })
+  @ApiResponse({
+    status: 200,
+    description: 'Imagem enviada',
+    type: UserPresenterWrapper,
+  })
   @UseInterceptors(FileInterceptor('file'))
   async uploadMyImage(
     @Authenticated() user: any,
@@ -192,8 +225,12 @@ export class UsersController {
 
   @Patch('/:id/upload-image')
   @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Upload user image by ID' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Fazer upload de imagem por ID (apenas admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Imagem enviada',
+    type: UserPresenterWrapper,
+  })
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
     @Param('id') id: string,
@@ -218,8 +255,12 @@ export class UsersController {
   }
 
   @Patch('/me/delete-image')
-  @ApiOperation({ summary: 'Delete authenticated user image' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Remover imagem do usuário autenticado' })
+  @ApiResponse({
+    status: 200,
+    description: 'Imagem removida',
+    type: UserPresenterWrapper,
+  })
   async deleteMyImage(
     @Authenticated() user: any,
   ): Promise<UserPresenterWrapper> {
@@ -234,8 +275,12 @@ export class UsersController {
 
   @Patch('/:id/delete-image')
   @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Delete user image by ID' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Remover imagem do usuário por ID (apenas admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Imagem removida',
+    type: UserPresenterWrapper,
+  })
   async deleteImage(@Param('id') id: string): Promise<UserPresenterWrapper> {
     const data = await this.userFacade.deleteImageUseCase.execute({
       id,
@@ -248,8 +293,12 @@ export class UsersController {
 
   @Patch('/:id/activate')
   @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Activate user by ID' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Ativar usuário por ID (apenas admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário ativado',
+    type: UserPresenterWrapper,
+  })
   async activateUser(@Param('id') id: string): Promise<UserPresenterWrapper> {
     const data = await this.userFacade.updateUserUseCase.execute({
       id,
@@ -263,8 +312,12 @@ export class UsersController {
 
   @Patch('/:id/deactivate')
   @Role(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Deactivate user by ID' })
-  @ApiResponse({ status: 200, type: UserPresenterWrapper })
+  @ApiOperation({ summary: 'Desativar usuário por ID (apenas admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário desativado',
+    type: UserPresenterWrapper,
+  })
   async deactivateUser(@Param('id') id: string): Promise<UserPresenterWrapper> {
     const data = await this.userFacade.updateUserUseCase.execute({
       id,

@@ -27,4 +27,5 @@
       "@/auth/*": ["./src/modules/auth/*"]
     }
   },
+  "include": ["src", "prisma"]
 }
