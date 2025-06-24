@@ -1,4 +1,10 @@
-import { IsDate, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 import { ClassValidatorFields } from '@/shared/domain/validators/class-validator-fields';
 
@@ -11,6 +17,7 @@ export class TaskRules {
   title: string;
 
   @IsString()
+  @IsOptional()
   description: string;
 
   @IsDate()
