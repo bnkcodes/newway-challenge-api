@@ -1,0 +1,24 @@
+Olá João!
+
+Segue o teste técnico da New Way Challenge.
+
+Consegui implementar a API completa em Nest.js com TypeScript e coloquei tudo funcionando na AWS. O backend ficou bem robusto, com autenticação JWT, sistema de permissões (usuário comum e admin), CRUD completo de usuários e tarefas, validações, documentação Swagger interativa e testes automatizados.
+
+A parte mais interessante foi que, como mencionei na entrevista, aprendi Terraform durante o projeto e consegui implementar toda a infraestrutura na AWS. Criei ECS Fargate, RDS PostgreSQL, Application Load Balancer, ECR, Secrets Manager, VPC com subnets públicas e privadas, CloudWatch para logs, e tudo funcionando perfeitamente.
+
+A API está rodando em produção aqui: http://newway-challenge-alb-499076483.sa-east-1.elb.amazonaws.com
+
+E a documentação Swagger interativa está em: http://newway-challenge-alb-499076483.sa-east-1.elb.amazonaws.com/doc/api
+
+O repositório é: https://github.com/bnkcodes/newway-challenge-api
+
+Para testar, você pode usar o Swagger UI (mais fácil) ou os comandos cURL que deixei documentados. Tem um usuário admin já criado: admin@example.com / admin123.
+
+Como mencionei antes, não consegui fazer o frontend por conta do tempo, mas o backend ficou bem completo e demonstra bem minhas habilidades técnicas. Sei que isso pode pesar na avaliação, mas espero que considerem o trabalho feito no backend e a capacidade de aprendizado demonstrada com o Terraform.
+
+Estou disponível para uma demonstração ao vivo se quiserem ver o código rodando ou esclarecer qualquer dúvida sobre a implementação.
+
+Aguardo o feedback!
+
+Abraços,
+Bruno

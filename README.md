@@ -346,3 +346,63 @@ O projeto segue princípios de **Domain-Driven Design (DDD)** e **Clean Architec
 - DDD (Domain-Driven Design)
 - Clean Architecture
 - Repository Pattern
+
+## Postman Collection
+
+Para testar a API, você pode usar a coleção do Postman incluída neste projeto.
+
+### Como usar:
+
+1. **Importar a coleção e environment**:
+   - Abra o Postman
+   - Clique em "Import"
+   - Selecione os arquivos:
+     - `postman/newWay-challenge.postman_collection.json`
+     - `postman/newway-challenge.postman_environment.json`
+
+2. **Selecionar o environment**:
+   - No canto superior direito do Postman, selecione o environment "NewWay Challenge - Production"
+   - A URL da API já está configurada
+   - As variáveis `access_token`, `user_id` e `task_id` serão preenchidas automaticamente
+
+3. **Fluxo de teste**:
+   1. Execute primeiro o endpoint **Auth > Login** para obter o token
+   2. O token será automaticamente salvo nas variáveis da coleção
+   3. Execute os outros endpoints conforme necessário
+
+### Endpoints disponíveis:
+
+#### Autenticação
+- `POST /auth/login` - Login de usuário
+
+#### Usuários
+- `POST /users` - Registrar novo usuário
+- `GET /users/me` - Obter usuário autenticado
+- `PUT /users/me` - Atualizar usuário autenticado
+- `PATCH /users/me/upload-image` - Upload de imagem
+- `PATCH /users/me/delete-image` - Deletar imagem
+- `PATCH /users/me/deactivate` - Desativar conta
+
+#### Tarefas
+- `POST /tasks` - Criar nova tarefa
+- `GET /tasks` - Listar tarefas do usuário
+- `PUT /tasks/:id` - Atualizar tarefa
+- `DELETE /tasks/:id` - Deletar tarefa
+
+#### Admin (Apenas para administradores)
+- `GET /users` - Listar todos os usuários
+- `PUT /users/:id` - Atualizar usuário por ID
+- `PATCH /users/:id/upload-image` - Upload de imagem para usuário
+- `PATCH /users/:id/delete-image` - Deletar imagem do usuário
+- `PATCH /users/:id/deactivate` - Desativar usuário
+- `PATCH /users/:id/activate` - Ativar usuário
+- `GET /tasks/user/:userid` - Listar tarefas de um usuário específico
+
+### Credenciais de teste:
+- **Email**: `admin@example.com`
+- **Senha**: `admin123`
+
+### Observações:
+- A coleção inclui scripts automáticos para salvar tokens e IDs
+- Alguns endpoints requerem autenticação (Bearer token)
+- Endpoints de admin requerem role de ADMIN
